@@ -805,7 +805,7 @@ def run(test, params, env):
             # Hard-reboot required
             test_params.main_vm.destroy(gracefully=True,
                                         free_mac_addresses=False)
-        #解决自动测试过程出现问题虚拟机不恢复
+        
         #try:
            # test_params.main_vm.start()
         #except virt_vm.VMStartError:
