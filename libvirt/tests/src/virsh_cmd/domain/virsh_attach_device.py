@@ -805,10 +805,13 @@ def run(test, params, env):
             # Hard-reboot required
             test_params.main_vm.destroy(gracefully=True,
                                         free_mac_addresses=False)
-        try:
-            test_params.main_vm.start()
-        except virt_vm.VMStartError:
-            raise error.TestFail('VM Failed to start for some reason!')
+        #解决自动测试过程出现问题虚拟机不恢复
+        #try:
+           # test_params.main_vm.start()
+        #except virt_vm.VMStartError:
+            #raise error.TestFail('VM Failed to start for some reason!')
+        test_params.main_vm.start()
+        
         # Signal devices reboot is finished
         for test_device in test_devices:
             test_device.booted = True
