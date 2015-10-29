@@ -154,58 +154,58 @@ def run(test, params, env):
 		# Back up xml file.Xen host has no guest xml file to define a guset.
     backup_xml = vm_xml.VMXML.new_from_inactive_dumpxml(vm_name)
     
-	try:
-		# Run command
-		result = virsh.schedinfo(vm_ref, options_ref,
-		                       ignore_status=True, debug=True)
-		status = result.exit_status
-		
-		# VM must be running to get cgroup parameters.
-		if not vm.is_alive():
-		  vm.start()
-		
-		if options_ref.count("config"):
-		  vm.destroy()
-		  vm.start()
-		
-		set_value_of_cgroup = get_parameter_in_cgroup(vm, cgroup_type=schedinfo_param,
-		                                            parameter=cgroup_ref)
-		vm.destroy()
-		
-		if set_ref:
-		  set_value_of_output = schedinfo_output_analyse(result, set_ref,
-		                                                 scheduler_value)
-	finally:
-		backup_xml.sync()
+    try:
+        # Run command
+        result = virsh.schedinfo(vm_ref, options_ref,
+                                 ignore_status=True, debug=True)
+        status = result.exit_status
 
-	  # Check result
-	  if status_error == "no":
-	      if status:
-	          raise error.TestFail("Run failed with right command.")
-	      else:
-	          if set_ref and set_value_expected:
-	              logging.info("value will be set:%s\n"
-	                           "set value in output:%s\n"
-	                           "set value in cgroup:%s\n"
-	                           "expected value:%s" % (
-	                               set_value, set_value_of_output,
-	                               set_value_of_cgroup, set_value_expected))
-	              if set_value_of_output is None:
-	                  raise error.TestFail("Get parameter %s failed." % set_ref)
-	              # Value in output of virsh schedinfo is not guaranteed 'correct'
-	              # when we use --config.
-	              # This is my attempt to fix it
-	              # http://www.redhat.com/archives/libvir-list/2014-May/msg00466.html.
-	              # But this patch did not go into upstream of libvirt.
-	              # Libvirt just guarantee that the value is correct in next boot
-	              # when we use --config. So skip checking of output in this case.
-	              if (not (set_value_expected == set_value_of_output) and
-	                      not (options_ref.count("config"))):
-	                  raise error.TestFail("Run successful but value "
-	                                       "in output is not expected.")
-	              if not (set_value_expected == set_value_of_cgroup):
-	                  raise error.TestFail("Run successful but value "
-	                                       "in cgroup is not expected.")
-	  else:
-	      if not status:
-	          raise error.TestFail("Run successfully with wrong command.")
+        # VM must be running to get cgroup parameters.
+        if not vm.is_alive():
+          vm.start()
+
+        if options_ref.count("config"):
+          vm.destroy()
+          vm.start()
+
+        set_value_of_cgroup = get_parameter_in_cgroup(vm, cgroup_type=schedinfo_param,
+                                                      parameter=cgroup_ref)
+        vm.destroy()
+
+        if set_ref:
+          set_value_of_output = schedinfo_output_analyse(result, set_ref,
+                                                         scheduler_value)
+    finally:
+        backup_xml.sync()
+
+    # Check result
+    if status_error == "no":
+        if status:
+          raise error.TestFail("Run failed with right command.")
+        else:
+          if set_ref and set_value_expected:
+              logging.info("value will be set:%s\n"
+                           "set value in output:%s\n"
+                           "set value in cgroup:%s\n"
+                           "expected value:%s" % (
+                               set_value, set_value_of_output,
+                               set_value_of_cgroup, set_value_expected))
+              if set_value_of_output is None:
+                  raise error.TestFail("Get parameter %s failed." % set_ref)
+              # Value in output of virsh schedinfo is not guaranteed 'correct'
+              # when we use --config.
+              # This is my attempt to fix it
+              # http://www.redhat.com/archives/libvir-list/2014-May/msg00466.html.
+              # But this patch did not go into upstream of libvirt.
+              # Libvirt just guarantee that the value is correct in next boot
+              # when we use --config. So skip checking of output in this case.
+              if (not (set_value_expected == set_value_of_output) and
+                      not (options_ref.count("config"))):
+                  raise error.TestFail("Run successful but value "
+                                       "in output is not expected.")
+              if not (set_value_expected == set_value_of_cgroup):
+                  raise error.TestFail("Run successful but value "
+                                       "in cgroup is not expected.")
+    else:
+        if not status:
+            raise error.TestFail("Run successfully with wrong command.")
