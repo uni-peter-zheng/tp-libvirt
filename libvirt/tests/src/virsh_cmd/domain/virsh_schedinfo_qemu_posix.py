@@ -154,29 +154,29 @@ def run(test, params, env):
 		# Back up xml file.Xen host has no guest xml file to define a guset.
     backup_xml = vm_xml.VMXML.new_from_inactive_dumpxml(vm_name)
     
-    try:
-			  # Run command
-			  result = virsh.schedinfo(vm_ref, options_ref,
-			                           ignore_status=True, debug=True)
-			  status = result.exit_status
-			
-			  # VM must be running to get cgroup parameters.
-			  if not vm.is_alive():
-			      vm.start()
-			
-			  if options_ref.count("config"):
-			      vm.destroy()
-			      vm.start()
-			
-			  set_value_of_cgroup = get_parameter_in_cgroup(vm, cgroup_type=schedinfo_param,
-			                                                parameter=cgroup_ref)
-			  vm.destroy()
-			
-			  if set_ref:
-			      set_value_of_output = schedinfo_output_analyse(result, set_ref,
-			                                                     scheduler_value)
-		finally:
-				backup_xml.sync()
+	try:
+		# Run command
+		result = virsh.schedinfo(vm_ref, options_ref,
+		                       ignore_status=True, debug=True)
+		status = result.exit_status
+		
+		# VM must be running to get cgroup parameters.
+		if not vm.is_alive():
+		  vm.start()
+		
+		if options_ref.count("config"):
+		  vm.destroy()
+		  vm.start()
+		
+		set_value_of_cgroup = get_parameter_in_cgroup(vm, cgroup_type=schedinfo_param,
+		                                            parameter=cgroup_ref)
+		vm.destroy()
+		
+		if set_ref:
+		  set_value_of_output = schedinfo_output_analyse(result, set_ref,
+		                                                 scheduler_value)
+	finally:
+		backup_xml.sync()
 
 	  # Check result
 	  if status_error == "no":
