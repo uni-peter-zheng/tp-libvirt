@@ -104,7 +104,10 @@ def run(test, params, env):
 
     # Prepare vm test environment
     vm_name = params.get("main_vm")
-
+    
+    # Back up xml file.Xen host has no guest xml file to define a guset.
+    backup_xml = vm_xml.VMXML.new_from_inactive_dumpxml(vm_name)
+    
     if set_ref == "none":
         options_ref = "--set"
         set_ref = None
@@ -150,9 +153,6 @@ def run(test, params, env):
             vm_ref = hex(int(domid))
 
     options_ref += " %s " % options_suffix
-
-		# Back up xml file.Xen host has no guest xml file to define a guset.
-    backup_xml = vm_xml.VMXML.new_from_inactive_dumpxml(vm_name)
     
     try:
         # Run command
