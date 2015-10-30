@@ -1,4 +1,5 @@
 import logging
+import time
 from autotest.client.shared import error
 from virttest import virsh
 from virttest.libvirt_xml import vm_xml
@@ -31,6 +32,7 @@ def prepare_vm_state(vm, vm_state):
     elif vm_state == "running":
         if vm.state != "running":
             vm.destroy()
+            time.sleep(1)
             vm.start()
     elif vm_state == "paused":
         if not vm.is_paused():

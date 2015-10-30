@@ -1,4 +1,5 @@
 import os
+import time
 from autotest.client.shared import error
 from virttest import virsh
 from virttest import utils_libvirtd
@@ -73,6 +74,7 @@ def run(test, params, env):
 
     if savefile:
         virsh.restore(savefile)
+        time.sleep(1)
 
     # check status_error
     try:

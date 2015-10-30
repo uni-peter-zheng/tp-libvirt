@@ -1,6 +1,7 @@
 import re
 import logging
 import os
+import time
 from autotest.client.shared import error
 from virttest.libvirt_xml import vm_xml, xcepts
 from virttest import virsh
@@ -166,6 +167,7 @@ def run(test, params, env):
 
         if options_ref.count("config"):
           vm.destroy()
+          time.sleep(1)
           vm.start()
 
         set_value_of_cgroup = get_parameter_in_cgroup(vm, cgroup_type=schedinfo_param,
