@@ -1,5 +1,6 @@
 import os
 import logging
+import time
 from autotest.client.shared import error
 from virttest import virsh, libvirt_xml
 
@@ -20,6 +21,7 @@ def reset_domain(vm, vm_state, needs_agent=False):
         vm_xml.sync()
     vm_xml.set_vm_vcpus(vm.name, 4, 1)
     if not vm_state == "shut off":
+        time.sleep(1)
         vm.start()
         if needs_agent:
             vm.prepare_guest_agent(prepare_xml=False)
