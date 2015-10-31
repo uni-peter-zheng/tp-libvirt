@@ -37,6 +37,7 @@ def prepare_vm_state(vm, vm_state):
     elif vm_state == "paused":
         if not vm.is_paused():
             vm.destroy()
+            time.sleep(1)
             vm.start()
             vm.pause()
     elif vm_state == "shutoff":
@@ -44,6 +45,7 @@ def prepare_vm_state(vm, vm_state):
     elif vm_state == "paniced":
         if vm.state() != "running":
             vm.destroy()
+            time.sleep(1)
             vm.start()
         try:
             session = vm.wait_for_login()
