@@ -1,4 +1,5 @@
 import logging
+import time
 from autotest.client.shared import error
 from virttest import aexpect, utils_test
 from virttest.libvirt_xml import vm_xml
@@ -94,6 +95,7 @@ def run(test, params, env):
     vmxml_backup = vm_xml.VMXML.new_from_inactive_dumpxml(vm_name)
     if vm.is_alive():
         vm.destroy()
+        time.sleep(1)
     if vm.is_qemu():
         xml_console_config(vm_name)
 
