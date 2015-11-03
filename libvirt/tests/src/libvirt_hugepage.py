@@ -101,6 +101,7 @@ def run(test, params, env):
         utils_memory.set_transparent_hugepage('never')
 
     # set/del memoryBacking tag
+    vmxml_backup = {}
     for vm_name in vm_names:
         vmxml_backup[vm_name] = vm_xml.VMXML.new_from_inactive_dumpxml(vm_name)
         if mb_enable:
