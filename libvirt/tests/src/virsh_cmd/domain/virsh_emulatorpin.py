@@ -203,7 +203,11 @@ def run(test, params, env):
         vm.destroy()
         vmxml.placement = emulatorpin_placement
         vmxml.sync()
-        vm.start()
+        try:
+            vm.start()
+        except Exception,e:
+            vmxml_backup.sync()
+            raise Exception,e
 
     test_dicts = dict(params)
     test_dicts['vm'] = vm
