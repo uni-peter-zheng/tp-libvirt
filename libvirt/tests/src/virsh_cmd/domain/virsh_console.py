@@ -95,7 +95,6 @@ def run(test, params, env):
     vmxml_backup = vm_xml.VMXML.new_from_inactive_dumpxml(vm_name)
     if vm.is_alive():
         vm.destroy()
-        time.sleep(1)
     if vm.is_qemu():
         xml_console_config(vm_name)
 
@@ -103,7 +102,7 @@ def run(test, params, env):
         # Guarantee cleanup after config vm console failed.
         if vm.is_qemu():
             vm_console_config(vm)
-
+        time.sleep(1)
         # Prepare vm state for test
         if vm_state != "shutoff":
             vm.start(autoconsole=False)
