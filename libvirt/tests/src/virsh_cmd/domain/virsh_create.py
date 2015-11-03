@@ -1,6 +1,7 @@
 import time
 import commands
 import logging
+import time
 from autotest.client.shared import error
 from virttest import aexpect, utils_test, virsh, utils_misc
 
@@ -90,9 +91,11 @@ def run(test, params, env):
                     raise error.TestFail("Expect fail, but succeed indeed")
             elif "--console" in options:
                 # Use session for console
+                time.sleep(1)
                 command = "virsh create %s %s" % (xmlfile, options)
                 session = aexpect.ShellSession(command)
                 # check domain status including paused and running
+                time.sleep(1)
                 create_status_check(vm)
                 status = utils_test.libvirt.verify_virsh_console(
                     session, c_user, c_passwd, timeout=90, debug=True)
