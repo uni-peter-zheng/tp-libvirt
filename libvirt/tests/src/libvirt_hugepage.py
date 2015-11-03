@@ -126,11 +126,6 @@ def run(test, params, env):
                     logging.debug(e)
                     pass  # jump out of for-loop
                 else:
-                    for vm_name in vm_names:
-                       if mb_enable:
-                            vm_xml.VMXML.del_memoryBacking_tag(vm_name)
-                       else:
-                            vm_xml.VMXML.set_memoryBacking_tag(vm_name)
                     error_msg = "Test failed in positive case. error: %s\n" % e
                     raise error.TestFail(error_msg)
             if vm.is_alive() is not True:
