@@ -18,7 +18,8 @@ def run(test, params, env):
     domuuid = vm.get_uuid()
     domid = ""
     libvirtd_inst = utils_libvirtd.Libvirtd()
-
+    if vm.is_alive() is True:
+        vm.destroy()
     help_info = virsh.help("qemu-monitor-command").stdout.strip()
     if "--pretty" in options:
         if "--pretty" not in help_info:
@@ -33,16 +34,16 @@ def run(test, params, env):
             domid = vm.get_id()
         if vm_state == "paused":
             vm.pause()
-
         if vm_ref == "domname":
             vm_ref = vm_name
         elif vm_ref == "domid":
+            domid = vm.get_id()
             vm_ref = domid
         elif vm_ref == "domuuid":
             vm_ref = domuuid
         elif domid and vm_ref == "hex_id":
             vm_ref = hex(int(domid))
-
+        
         # Run virsh command
         cmd_result = virsh.qemu_monitor_command(vm_ref, cmd, options,
                                                 ignore_status=True,
