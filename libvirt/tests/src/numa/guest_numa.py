@@ -122,8 +122,8 @@ def run(test, params, env):
                 raise error.TestError("Hugepage size [%s] isn't supported, "
                                       "please verify kernel cmdline configuration."
                                       % page['size'])
-            #m_path = "/dev/hugepages%s" % size_dict[page['size']] 统一使用挂载点为/dev/hugepages，避免用例修改qemu_conf后导致其他用例失败
-			m_path = "/dev/hugepages"
+            #m_path = "/dev/hugepages%s" % size_dict[page['size']] 
+	    m_path = "/dev/hugepages"
             hp_cl.hugepage_size = int(page['size'])
             hp_cl.hugepage_path = m_path
             hp_cl.mount_hugepage_fs()
