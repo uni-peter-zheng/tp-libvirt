@@ -236,7 +236,7 @@ def run(test, params, env):
         for i in range(int(loop_range)):
             logging.debug("Test loop: %s" % i)
             virsh.managedsave(vm_name)
-			time.sleep(1)
+            time.sleep(1)
             virsh.start(vm_name)
         # Check libvirtd status.
         if not libvirtd.is_running():
