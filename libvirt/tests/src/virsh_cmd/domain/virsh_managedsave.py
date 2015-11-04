@@ -88,7 +88,7 @@ def run(test, params, env):
             # it should be in runing state and can be login.
             vm.shutdown()
             vm.wait_for_shutdown()
-			time.sleep(1)
+            time.sleep(1)
             vm.start()
             vm.wait_for_login()
 
