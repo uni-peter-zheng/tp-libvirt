@@ -263,9 +263,9 @@ def run(test, params, env):
     if dest_format == "raw":
         options += " --raw"
     if with_blockdev:
-        if not libvirt_version.version_compare(1, 2, 13):
-            raise error.TestNAError("--blockdev option not supported in "
-                                    "current version")
+        #if not libvirt_version.version_compare(1, 2, 13):
+        #    raise error.TestNAError("--blockdev option not supported in "
+        #                            "current version")
         options += " --blockdev"
     if len(bandwidth):
         options += " --bandwidth %s" % bandwidth
