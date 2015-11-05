@@ -123,7 +123,7 @@ def run(test, params, env):
                                       "please verify kernel cmdline configuration."
                                       % page['size'])
             #m_path = "/dev/hugepages%s" % size_dict[page['size']] 
-	    m_path = "/dev/hugepages"
+            m_path = "/dev/hugepages"
             hp_cl.hugepage_size = int(page['size'])
             hp_cl.hugepage_path = m_path
             hp_cl.mount_hugepage_fs()
