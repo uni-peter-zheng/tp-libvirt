@@ -106,7 +106,6 @@ def run(test, params, env):
                     raise error.TestError("Can not execute command in guest.")
                 sleep_pid = session.cmd_output("echo $!").strip()
                 virsh.managedsave(vm_ref)
-                time.sleep(1) 
                 virsh.start(vm_ref, options=opt)
             else:
                 cmd_result = virsh.start(vm_ref, options=opt)
@@ -146,6 +145,9 @@ def run(test, params, env):
             raise error.TestFail("Failed to login guest.")
     finally:
         # clean up
+        if opt.count("force-boot"):
+            virsh.managedsave_remove(vm_ref)
+        
         if libvirtd_state == "off":
             utils_libvirtd.libvirtd_start()
 
