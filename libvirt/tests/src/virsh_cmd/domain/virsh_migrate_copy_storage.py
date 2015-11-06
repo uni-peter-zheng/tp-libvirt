@@ -122,7 +122,7 @@ def run(test, params, env):
         if not abnormal_type == "not_exist_file":
             for disk, size in all_disks.items():
                 if disk == file_path:
-                    rdm.create_image("file", disk, size, None, None)
+                    rdm.create_image("file", disk, size, None, None, img_frmt="qcow2")
                 else:
                     rdm.create_image(disk_type, disk, size, vgname,
                                      os.path.basename(disk))
