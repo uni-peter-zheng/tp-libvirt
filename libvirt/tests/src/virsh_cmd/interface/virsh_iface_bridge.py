@@ -89,6 +89,10 @@ def run(test, params, env):
                 # Get the new create bridge IP address
                 try:
                     br_ip = utils_net.get_ip_address_by_interface(bridge_name)
+                    temp_command = 'ip route add 192.168.1.0/24 dev %s src %s table 20' % (bridge_name, br_ip)
+                    os.system(temp_command)
+                    temp_command = 'ip rule add from %s table 20' %br_ip
+                    os.system(temp_command)
                 except:
                     br_ip = ""
                 # check IP of new bridge
@@ -141,6 +145,7 @@ def run(test, params, env):
                 net_iface.down()
             # Clear the new create bridge if it exists
             try:
+                os.system("ip rule del table 20")
                 utils_net.bring_down_ifname(bridge_name)
                 utils.run("brctl delbr %s" % bridge_name)
             except utils_net.TAPBringDownError:
