@@ -74,8 +74,6 @@ def run(test, params, env):
         if application == "attach":
             vm = env.get_vm(vm_name)
             session = vm.wait_for_login()
-            #import pdb
-	    #pdb.set_trace()
             virsh.attach_disk(vm_name, volumes.values()[volume_count - 1],
                               disk_target, "--config")
             vm.destroy()
@@ -150,6 +148,8 @@ def run(test, params, env):
             elif application == "attach":
                 virsh.detach_disk(vm_name, disk_target,"--config")
         finally:
+            vm.destroy()
+	    time.sleep(1)
             pvtest.cleanup_pool(pool_name, pool_type,
                                 pool_target, emulated_img,
                                 device_name=block_device)
