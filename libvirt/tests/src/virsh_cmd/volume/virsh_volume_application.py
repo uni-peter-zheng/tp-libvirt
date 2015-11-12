@@ -1,5 +1,6 @@
 import os
 import logging
+import time
 from autotest.client.shared import error
 from virttest import libvirt_storage
 from virttest import virsh
@@ -73,8 +74,15 @@ def run(test, params, env):
         if application == "attach":
             vm = env.get_vm(vm_name)
             session = vm.wait_for_login()
+            #import pdb
+	    #pdb.set_trace()
             virsh.attach_disk(vm_name, volumes.values()[volume_count - 1],
-                              disk_target)
+                              disk_target, "--config")
+            vm.destroy()
+            time.sleep(5)
+            vm.start()
+            #time.sleep(20)
+            session = vm.wait_for_login()
             vm_attach_device = "/dev/%s" % disk_target
             if session.cmd_status("which parted"):
                 # No parted command, check device only
@@ -140,7 +148,7 @@ def run(test, params, env):
                 if virsh.domain_exists(vm_name):
                     virsh.remove_domain(vm_name)
             elif application == "attach":
-                virsh.detach_disk(vm_name, disk_target)
+                virsh.detach_disk(vm_name, disk_target,"--config")
         finally:
             pvtest.cleanup_pool(pool_name, pool_type,
                                 pool_target, emulated_img,
