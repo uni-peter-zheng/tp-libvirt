@@ -454,9 +454,10 @@ def run(test, params, env):
                     loop_range = params.get("loop_range", "20")
                     vm_managedsave_loop(vm_name, loop_range, libvirtd)
                 else:
-                    vm_recover_check(option, libvirtd, check_shutdown)
+                    vm_recover_check(option, libvirtd, check_shutdown)  
     finally:
         # Restore test environment.
+        virsh.managedsave_remove(vm_name)
         if vm.is_paused():
             virsh.resume(vm_name)
         elif vm.is_dead():
@@ -467,7 +468,7 @@ def run(test, params, env):
             virsh.autostart(vm_name, "--disable",
                             ignore_status=True)
         if vm.is_alive():
-            vm.destroy(gracefully=False)
+            vm.destroy(gracefully=False)      
         vmxml_backup.sync()
         if multi_guests:
             for i in range(int(multi_guests)):
