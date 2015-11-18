@@ -27,7 +27,7 @@ def xml_console_recover(vmxml):
         return False
 
 
-def vm_console_config(vm, device='ttyS0', speed='115200'):
+def vm_console_config(vm, device='hvc0', speed='115200'):
     """
     Login to config vm for virsh console.
     Three step:
