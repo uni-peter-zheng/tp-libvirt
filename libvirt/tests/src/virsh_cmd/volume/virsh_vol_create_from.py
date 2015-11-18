@@ -18,7 +18,6 @@ def run(test, params, env):
     virsh, so which can't be destination pools. And for disk pool, it can't
     create volume with specified format.
     """
-
     src_pool_type = params.get("src_pool_type")
     src_pool_target = params.get("src_pool_target")
     src_emulated_image = params.get("src_emulated_image")
@@ -40,7 +39,6 @@ def run(test, params, env):
         # Create the src/dest pool
         src_pool_name = "virt-%s-pool" % src_pool_type
         dest_pool_name = "virt-%s-pool" % dest_pool_type
-
         pvt = utlv.PoolVolumeTest(test, params)
         pvt.pre_pool(src_pool_name, src_pool_type, src_pool_target,
                      src_emulated_image, image_size="40M",
@@ -56,7 +54,11 @@ def run(test, params, env):
                       libvirt_storage.StoragePool().list_pools())
 
         # Create the src vol
-        vol_size = "4194304"
+        if src_pool_type in ["scsi", "iscsi"]:
+	    vol_size = "41943040"
+	#   vol_size = "1048576"
+	else:
+	    vol_size = "4194304"	
         if src_pool_type in ["dir", "logical", "netfs", "fs"]:
             src_vol_name = "src_vol"
             pvt.pre_vol(vol_name=src_vol_name, vol_format=src_vol_format,
@@ -70,7 +72,7 @@ def run(test, params, env):
             else:
                 raise error.TestFail("No volume in pool: %s" % src_pool_name)
         # Prepare vol xml file
-        dest_vol_name = "dest_vol"
+        dest_vol_name = "dest_vl"
         # According to BZ#1138523, we need inpect the right name
         # (disk partition) for new volume
         if dest_pool_type == "disk":
