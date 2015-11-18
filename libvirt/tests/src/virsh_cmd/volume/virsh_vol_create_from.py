@@ -56,7 +56,7 @@ def run(test, params, env):
                       libvirt_storage.StoragePool().list_pools())
 
         # Create the src vol
-        vol_size = "1048576"
+        vol_size = "4194304"
         if src_pool_type in ["dir", "logical", "netfs", "fs"]:
             src_vol_name = "src_vol"
             pvt.pre_vol(vol_name=src_vol_name, vol_format=src_vol_format,
@@ -107,7 +107,7 @@ def run(test, params, env):
                                            src_vol_name, src_pool_name,
                                            prealloc_option, ignore_status=True,
                                            debug=True)
-        status = cmd_result.exit_status
+	status = cmd_result.exit_status
 
         # Check result
         if status_error == "no":
