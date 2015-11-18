@@ -81,6 +81,16 @@ def run(test, params, env):
             for i in pre_xml_list:
                 if desc_sec in i:
                     pre_xml_list.remove(i)
+        
+        pre_list_len = len(pre_xml_list)
+        if (pre_list_len > 1):
+            i = 0
+            while (i < pre_list_len-1):
+                if (re.search(r"<source file=\S+>", pre_xml_list[i]) and re.search(r"</source>", pre_xml_list[i+1])):
+                    pre_xml_list[i] = pre_xml_list[i].replace('>', '/>')
+                    pre_xml_list.remove(pre_xml_list[i+1])
+                i = i+1;
+        
         if pre_xml_list == after_xml_list:
             logging.info("Succeed to check the xml for description and name")
         else:
