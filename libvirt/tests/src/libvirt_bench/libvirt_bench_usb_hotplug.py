@@ -21,7 +21,7 @@ def run(test, params, env):
     mouse = "yes" == params.get("usb_hotplug_mouse", "no")
     tablet = "yes" == params.get("usb_hotplug_tablet", "no")
     disk = "yes" == params.get("usb_hotplug_disk", "no")
-
+    
     attach_count = int(params.get("attach_count", "1"))
     attach_type = params.get("attach_type", "attach_device")
     bench_type = params.get("guest_bench", None)
@@ -120,7 +120,7 @@ def run(test, params, env):
                         disk_xml.target = {"dev": 'sdb', "bus": "usb"}
 
                         attributes = {'type_name': "usb", 'bus': "1", 'port': "0"}
-                        disk_xml.address = disk_xml.new_disk_address(**{"attrs": attributes})
+#                        disk_xml.address = disk_xml.new_disk_address(**{"attrs": attributes})
 
                         result = virsh.attach_device(vm_name, disk_xml.xml)
                         if result.exit_status:

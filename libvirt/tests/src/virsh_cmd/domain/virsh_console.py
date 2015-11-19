@@ -102,7 +102,7 @@ def run(test, params, env):
         # Guarantee cleanup after config vm console failed.
         if vm.is_qemu():
             vm_console_config(vm)
-        time.sleep(1)
+        time.sleep(5)
         # Prepare vm state for test
         if vm_state != "shutoff":
             vm.start(autoconsole=False)
