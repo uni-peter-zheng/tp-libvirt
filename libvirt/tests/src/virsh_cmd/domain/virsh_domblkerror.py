@@ -107,10 +107,13 @@ def run(test, params, env):
 
         # Attach disk to guest
         ret = virsh.attach_device(domain_opt=vm_name,
-                                  file_opt=img_disk.xml)
+                                  file_opt=img_disk.xml,flagstr="--config")
         if ret.exit_status != 0:
             raise error.TestFail("Fail to attach device %s" % ret.stderr)
-        time.sleep(2)
+        vm.destroy()
+	time.sleep(2)
+        vm.start()
+        session = vm.wait_for_login()
         logging.debug("domain xml is %s", virsh.dumpxml(vm_name))
         # get disk list after attach
         aft_list = session.cmd_output(get_disks_cmd).split("\n")
