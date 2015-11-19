@@ -288,6 +288,8 @@ class Virt_clone(object):
         if abnormal_type == "memory_lack":
             if params.has_key('memory_pid'):
                 pid = params.get('memory_pid')
+                if isinstance(pid,str):
+                    pid = int(pid)
                 utils_misc.safe_kill(pid, signal.SIGKILL)
                 utils.run("swapon -a")
             tmp_c_file = params.get("tmp_c_file", "/tmp/test.c")
@@ -772,8 +774,9 @@ def memory_lack(params):
     tmp_exe_file = params.get("tmp_exe_file", "/tmp/test")
     c_str = """
 #include <stdio.h>
+#include <unistd.h>
 #include <malloc.h>
-#define MAX 1024*4
+#define MAX 1024*1024*4
 int main(void){
     char *a;
     while(1) {
@@ -783,6 +786,7 @@ int main(void){
         }
     }
     while (1){
+        sleep(1);
     }
     return 0;
 }"""
