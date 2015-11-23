@@ -19,6 +19,7 @@ def run(test, params, env):
     Test for hotplug usb device.
     """
     # get the params from params
+
     vm_name = params.get("main_vm", "virt-tests-vm1")
     vm = env.get_vm(vm_name)
 
@@ -105,7 +106,7 @@ def run(test, params, env):
                     dev_xml.source = dev_xml.new_disk_source(**{"attrs": {'file': path}})
                     dev_xml.driver = {"name": "qemu", "type": 'qcow2', "cache": "none"}
                     dev_xml.target = {"dev": 'sdb', "bus": "usb"}
-                    dev_xml.address = dev_xml.new_disk_address(**{"attrs": attributes})
+#                    dev_xml.address = dev_xml.new_disk_address(**{"attrs": attributes})
                 else:
                     if usb_type == "mouse":
                         dev_xml = Input("mouse")
