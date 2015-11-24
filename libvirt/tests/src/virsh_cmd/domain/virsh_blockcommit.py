@@ -229,7 +229,7 @@ def run(test, params, env):
         blockcommit_options = "--wait --verbose"
 
         if with_timeout:
-            blockcommit_options += " --timeout 1"
+            blockcommit_options += " --timeout 2"
 
         if base_option == "shallow":
             blockcommit_options += " --shallow"
