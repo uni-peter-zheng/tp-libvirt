@@ -56,7 +56,7 @@ def run(test, params, env):
         # Create the src vol
         if src_pool_type in ["scsi", "iscsi"]:
 	    vol_size = "41943040"
-	#   vol_size = "1048576"
+        #vol_size = "1048576"
 	else:
 	    vol_size = "4194304"	
         if src_pool_type in ["dir", "logical", "netfs", "fs"]:
@@ -72,7 +72,7 @@ def run(test, params, env):
             else:
                 raise error.TestFail("No volume in pool: %s" % src_pool_name)
         # Prepare vol xml file
-        dest_vol_name = "dest_vl"
+        dest_vol_name = "dest_vol"
         # According to BZ#1138523, we need inpect the right name
         # (disk partition) for new volume
         if dest_pool_type == "disk":
