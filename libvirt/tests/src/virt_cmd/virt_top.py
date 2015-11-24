@@ -28,7 +28,7 @@ def run(test, params, env):
 
     cmd = "%s --stream 1>%s" % (VIRT_TOP, output_path)
     # Add a timeout command to end it automatically.
-    cmd = "timeout 10 %s" % cmd
+    cmd = "timeout 30 %s" % cmd
     cmd_result = utils.run(cmd, ignore_status=True)
     # Read and analyse the output of virt-top.
     success = False
