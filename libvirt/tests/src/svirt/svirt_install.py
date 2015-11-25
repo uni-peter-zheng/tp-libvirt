@@ -1,5 +1,5 @@
 import os
-
+import time
 from autotest.client import utils
 from autotest.client.shared import error
 from virttest import data_dir, storage, utils_selinux
@@ -65,6 +65,7 @@ def run(test, params, env):
 
         cmd += "&"
         utils.run(cmd, ignore_status=True)
+        time.sleep(5)
 
         def _vm_alive():
             return virsh.is_alive(vm_name)
