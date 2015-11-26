@@ -49,7 +49,7 @@ def run(test, params, env):
 
     try:
         utils_selinux.set_context_of_file(image_path, disk_label)
-        cmd = "virt-install --name %s --import --disk path=%s --ram '1024' " % (vm_name, image_path)
+        cmd = "virt-install --name %s --import --disk path=%s,bus=virtio --ram '1024' " % (vm_name, image_path)
         cmd += " --security"
         if sec_type == 'static':
             if sec_label is None:
