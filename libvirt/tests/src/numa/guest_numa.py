@@ -95,7 +95,8 @@ def run(test, params, env):
     page_list = handle_param(page_tuple, params)
     nr_pagesize_total = params.get("nr_pagesize_total")
     deallocate = False
-    default_nr_hugepages_path = "/sys/kernel/mm/hugepages/hugepages-2048kB/"
+    default_nr_hugepages_path = "/sys/kernel/mm/hugepages/hugepages-16384kB/"
+    # default_nr_hugepages_path = "/sys/kernel/mm/hugepages/hugepages-2048kB/"
     default_nr_hugepages_path += "nr_hugepages"
 
     if page_list:
@@ -103,7 +104,7 @@ def run(test, params, env):
             raise error.TestNAError("Setting hugepages more specifically per "
                                     "numa node not supported on current "
                                     "version")
-
+	
     hp_cl = test_setup.HugePageConfig(params)
     default_hp_size = hp_cl.get_hugepage_size()
     supported_hp_size = hp_cl.get_multi_supported_hugepage_size()
