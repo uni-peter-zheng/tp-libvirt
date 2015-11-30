@@ -251,6 +251,7 @@ def manipulate_vm(vm, operation, params=None):
             try:
                 inject_times -= 1
                 virsh.inject_nmi(vm.name, debug=True, ignore_status=False)
+		time.sleep(20)
             except error.CmdError, detail:
                 err_msg = "Inject nmi failed: %s" % detail
     elif operation == "dump":
