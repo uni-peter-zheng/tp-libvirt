@@ -126,8 +126,9 @@ def run(test, params, env):
                     for i in range(0, host_cells):
                         node_v = "Node %s" % i
                 else:
-                    node_v = "Node %s" % cell
-                    expect_result_list = [{"Node": node_v, page_k: huge_pages}]
+                    #node_v = "Node %s" % cell
+	            node_v = "Node 0"
+                    expect_result_list = [{"Node": node_v, page_k: "%s" % huge_pages}]
                 if check_freepages(result.stdout.strip(), expect_result_list):
                     logging.info("Huge page freepages check pass")
                 else:
