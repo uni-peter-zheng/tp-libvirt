@@ -145,6 +145,7 @@ def secret_validate(file=None, **virsh_dargs):
     """
     Test for schema secret
     """
+    
     cmd_result = virsh.secret_list(**virsh_dargs)
     libvirt.check_exit_status(cmd_result)
     try:
@@ -242,10 +243,4 @@ def run(test, params, env):
     if cmd_result.stdout.count("fail"):
         raise error.TestFail("xml fails to validate\n"
                              "Detail: %s." % cmd_result)
-        # Delete snapshots.
-        snapshot_lists = virsh.snapshot_list(vm_name)
-        if len(snapshot_lists) > 0:
-            libvirt.clean_up_snapshots(vm_name, snapshot_lists)
-            for snapshot in snapshot_lists:
-                virsh.snapshot_delete(vm_name, snapshot, "--metadata")
 
