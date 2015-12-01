@@ -583,6 +583,7 @@ def run(test, params, env):
                     utl.setup_or_cleanup_iscsi(is_setup=False,
                                                emulated_image=blkdev_n)
                 if with_shallow:
+                    time.sleep(5)
                     utl.setup_or_cleanup_iscsi(is_setup=False,
                                                emulated_image=back_n)
                 utl.setup_or_cleanup_iscsi(is_setup=False,
