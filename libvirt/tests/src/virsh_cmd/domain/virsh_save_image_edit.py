@@ -104,3 +104,5 @@ def run(test, params, env):
         if os.path.exists(vm_save):
             virsh.restore(vm_save)
             os.remove(vm_save)
+	
+	virsh.destroy (vm_name)
