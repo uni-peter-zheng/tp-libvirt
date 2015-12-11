@@ -179,7 +179,7 @@ def run(test, params, env):
     if device == "cdrom":
         virsh.detach_disk(vm_name, device_target, "--config",
                           ignore_status=True)
-
+   
     device_xml = create_device_xml(params, test.virtdir, device_source)
     if not no_attach:
         s_attach = virsh.attach_device(vm_name, device_xml,
@@ -303,8 +303,8 @@ def run(test, params, env):
                                          " when VM is running.")
 
         elif dt_options.count("live"):
-            if check_count_after_cmd:
-                raise error.TestFail("See device in xml after detach with"
+            if not check_count_after_cmd:
+                raise error.TestFail("Cannot see device in xml after detach with"
                                      "--live option")
             if not check_count_after_shutdown:
                 raise error.TestFail("Cannot see config detached device in"
@@ -314,8 +314,8 @@ def run(test, params, env):
                 raise error.TestFail("See device in VM with '--live' option"
                                      " when VM is running")
         elif dt_options.count("current"):
-            if check_count_after_cmd:
-                raise error.TestFail("See device in xml after detach with"
+            if not check_count_after_cmd:
+                raise error.TestFail("Cannot see device in xml after detach with"
                                      " --current option")
             if pre_vm_state == "running":
                 if not check_count_after_shutdown:

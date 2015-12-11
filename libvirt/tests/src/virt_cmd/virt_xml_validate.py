@@ -1,13 +1,16 @@
 import os
 import time
 import re
+import commands
 
 from autotest.client import os_dep, utils
 from autotest.client.shared import error
 
 from virttest import common, virsh, data_dir
 from virttest.utils_test import libvirt
+from virttest.libvirt_xml.secret_xml import SecretXML
 
+SECRET_DIR = "/etc/libvirt/secrets/"
 
 def domainsnapshot_validate(vm_name, file=None, **virsh_dargs):
     """
@@ -111,7 +114,7 @@ def nodedev_validate(file=None, **virsh_dargs):
     # Get dev name
     cmd_result = virsh.nodedev_list()
     libvirt.check_exit_status(cmd_result)
-
+    
     dev_name = cmd_result.stdout.strip().splitlines()[1]
     if dev_name:
         cmd_result = virsh.nodedev_dumpxml(dev_name, to_file=file)
@@ -145,7 +148,23 @@ def secret_validate(file=None, **virsh_dargs):
     """
     Test for schema secret
     """
-    
+    tmp_dir = data_dir.get_tmp_dir()
+    volume_path = os.path.join(tmp_dir, "secret_volume")
+    ephemeral = "no" 
+    private = "no"
+    secret_xml_obj = SecretXML(ephemeral, private)
+
+    status, uuid = commands.getstatusoutput("uuidgen")
+    if status:
+            raise error.TestNAError("Failed to generate valid uuid")
+
+    secret_xml_obj.uuid = uuid
+    secret_xml_obj.volume = volume_path
+    secret_xml_obj.usage = "volume"
+
+    secret_obj_xmlfile = os.path.join(SECRET_DIR, uuid + ".xml")
+    cmd_result = virsh.secret_define(secret_xml_obj.xml, debug=True)
+	 
     cmd_result = virsh.secret_list(**virsh_dargs)
     libvirt.check_exit_status(cmd_result)
     try:
@@ -158,7 +177,14 @@ def secret_validate(file=None, **virsh_dargs):
             virsh.secret_dumpxml(uuid, to_file=file, **virsh_dargs)
         except error.CmdError, e:
             raise error.TestError(str(e))
-
+    
+    virsh.secret_undefine(uuid, ignore_status=True)
+    if os.path.exists(volume_path):
+        os.unlink(volume_path)
+    if os.path.exists(secret_obj_xmlfile):
+        os.unlink(secret_obj_xmlfile)
+ 
+	
 
 def interface_validate(file=None, **virsh_dargs):
     """

@@ -1,5 +1,6 @@
 import os
 import logging
+import time
 from virttest import utils_config
 from virttest import utils_libvirtd
 from virttest.libvirt_xml import vm_xml
@@ -70,7 +71,8 @@ def run(test, params, env):
         except ShellTimeoutError:
             pass
         session.close()
-
+        
+	time.sleep(4)
         iohelper_pid = utils.run('pgrep -f %s' % dump_path).stdout.strip()
         logging.error('%s', iohelper_pid)
 
