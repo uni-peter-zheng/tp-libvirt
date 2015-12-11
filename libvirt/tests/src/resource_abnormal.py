@@ -311,6 +311,8 @@ class Virt_clone(object):
             if self.iscsi_dev:
                 self.iscsi_dev.cleanup()
             os.rmdir(self.mount_dir)
+        elif abnormal_type == "cpu_lack":
+            os.system("cat /sys/fs/cgroup/cpuset/cpuset.cpus > /sys/fs/cgroup/cpuset/machine.slice/cpuset.cpus")
         remove_machine_cgroup()
 
 
