@@ -25,7 +25,6 @@ def run(test, params, env):
     3.Recover test environment.
     4.Confirm the test result.
     """
-
     def check_vm_partition(vm, device, os_type, target_name, old_parts):
         """
         Check VM disk's partition.
@@ -298,7 +297,7 @@ def run(test, params, env):
         if disk_count_after_cmd == disk_count_before_cmd:
             check_count_after_cmd = False
     elif test_cmd == "detach-disk":
-        if disk_count_after_cmd < disk_count_before_cmd:
+        if dt_options == '' or dt_options == '--live' or disk_count_after_cmd < disk_count_before_cmd:
             check_count_after_cmd = False
 
     # Recover VM state.
