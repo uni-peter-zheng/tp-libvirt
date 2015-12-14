@@ -72,7 +72,7 @@ def run(test, params, env):
             pass
         session.close()
         
-	time.sleep(4)
+        time.sleep(4)
         iohelper_pid = utils.run('pgrep -f %s' % dump_path).stdout.strip()
         logging.error('%s', iohelper_pid)
 
@@ -102,3 +102,5 @@ def run(test, params, env):
         backup_xml.sync()
         config.restore()
         libvirtd.restart()
+        if vm.state() == "crashed":
+            vm.destroy()
