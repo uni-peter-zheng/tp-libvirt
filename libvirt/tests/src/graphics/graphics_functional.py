@@ -657,7 +657,8 @@ def get_expected_vnc_options(params, networks, expected_result):
 
     if auto_unix_socket == '1':
         listen_address = 'unix'
-        port = '/var/lib/libvirt/qemu/%s.vnc' % vm_name
+        #port = '/var/lib/libvirt/qemu/%s.vnc' % vm_name
+        port = '/var/lib/libvirt/qemu/domain-%s/vnc.sock' % vm_name
     else:
         if expected_port != 'not_set':
             port = str(int(expected_port) - 5900)
@@ -665,8 +666,8 @@ def get_expected_vnc_options(params, networks, expected_result):
             port = '0'
 
     expected_opts = {
-        'addr': listen_address,
         'port': port,
+        'addr': listen_address,
     }
 
     if vnc_tls == '1':
