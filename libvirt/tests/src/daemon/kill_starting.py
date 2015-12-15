@@ -40,7 +40,7 @@ def run(test, params, env):
 
         libvirtd.start(wait_for_working=False)
 
-        if not utils_misc.wait_for(lambda: bundle['recieved'], 20, 0.5):
+        if not utils_misc.wait_for(lambda: bundle['recieved'], 60, 0.5):
             raise error.TestFail("Expect recieve signal, but not.")
     finally:
         libvirtd.exit()
