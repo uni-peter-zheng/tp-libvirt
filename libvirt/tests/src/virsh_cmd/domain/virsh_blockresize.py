@@ -32,6 +32,7 @@ def run(test, params, env):
     vm = env.get_vm(vm_name)
     if vm.is_alive():
         vm.destroy()
+        vm.start()
     
 
     # Skip 'qed' cases for libvirt version greater than 1.1.0
