@@ -79,7 +79,9 @@ def run(test, params, env):
     vm = env.get_vm(vm_name)
     vmxml = VMXML.new_from_inactive_dumpxml(vm_name)
     backup_xml = vmxml.copy()
-
+    if vm.is_alive():
+        vm.destroy()
+     
     # Backup domain disk label
     disks = vm.get_disk_devices()
     backup_labels_of_disks = {}
