@@ -145,6 +145,7 @@ def run(test, params, env):
                 raise error.TestFail("Expected exit in %ss(+-%ss), but ran timeout in %ss" %
                                      (expected_exit_time, time_tolerance, wait_time))
 
+        time.sleep(10)
         check_unix_socket_files()
         if config_path:
             check_config_file()

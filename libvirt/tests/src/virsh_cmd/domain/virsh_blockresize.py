@@ -29,6 +29,11 @@ def run(test, params, env):
     status_error = "yes" == params.get("status_error", "yes")
     resize_value = params.get("resize_value")
     virsh_dargs = {'debug': True}
+    vm = env.get_vm(vm_name)
+    if vm.is_alive():
+        vm.destroy()
+        vm.start()
+    
 
     # Skip 'qed' cases for libvirt version greater than 1.1.0
     if libvirt_version.version_compare(1, 1, 0):

@@ -43,7 +43,8 @@ def run(test, params, env):
 
         # Wait for libvirtd to restart or reload
         time.sleep(1)
-
+        if signal_name == "SIGABRT":
+            time.sleep(120)
         if libvirtd.is_running():
             if not should_restart:
                 raise error.TestFail(
