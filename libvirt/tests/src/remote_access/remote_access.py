@@ -3,7 +3,7 @@ import os
 import logging
 import commands
 
-from virttest import remote
+from virttest import remote,libvirt_vm,virsh
 from autotest.client.shared import error, utils
 from virttest.utils_sasl import SASL
 from virttest.utils_conn import SSHConnection, TCPConnection, \
@@ -31,7 +31,7 @@ def remote_access(params):
     virsh_patterns = params.get("patterns_virsh_cmd", ".*Id\s*Name\s*State\s*.*")
     log_level = params.get("log_level", "LIBVIRT_DEBUG=3")
 
-    status_error = params.get("status_error", "no")
+    status_error = params.get("status_error", "no") 
     ret = connect_libvirtd(uri, read_only, virsh_cmd, auth_user,
                            auth_pwd, vm_name, status_error, extra_env,
                            log_level, su_user, virsh_patterns)
@@ -116,7 +116,6 @@ def run(test, params, env):
     """
     Test remote access with TCP, TLS connection
     """
-
     test_dict = dict(params)
     vm_name = test_dict.get("main_vm")
     vm = env.get_vm(vm_name)
@@ -170,7 +169,7 @@ def run(test, params, env):
     tcp_recovery = test_dict.get("tcp_auto_recovery", "yes")
     tls_recovery = test_dict.get("tls_auto_recovery", "yes")
     unix_recovery = test_dict.get("unix_auto_recovery", "yes")
-
+	
     port = ""
     # extra URI arguments
     extra_params = ""
@@ -239,7 +238,7 @@ def run(test, params, env):
     test_dict["uri"] = uri
 
     logging.debug("The final test dict:\n<%s>", test_dict)
-
+	
     if virsh_cmd == "start" and transport != "unix":
         session = remote.wait_for_login("ssh", server_ip, "22", "root",
                                         server_pwd, "#")
@@ -250,6 +249,7 @@ def run(test, params, env):
             raise error.TestNAError(output)
 
         session.close()
+    
 
     try:
         # setup IPv6
@@ -300,6 +300,7 @@ def run(test, params, env):
 
         # setup UNIX
         if transport == "unix" or unix_setup == "yes":
+	    virsh.destroy(vm_name, ignore_status=True, debug=True)
             unix_obj = UNIXConnection(test_dict)
             if unix_recovery == "yes":
                 objs_list.append(unix_obj)
@@ -342,7 +343,7 @@ def run(test, params, env):
             test_dict['tls_obj_new'] = tls_obj_new
             # only setup new CA and server
             tls_obj_new.conn_setup(True, False)
-
+	
         # setup SASL certification
         if sasl_user_pwd:
             # covert string tuple and list to python data type
@@ -354,7 +355,7 @@ def run(test, params, env):
             sasl_obj = SASL(test_dict)
             objs_list.append(sasl_obj)
             sasl_obj.setup()
-
+		
             for sasl_user, sasl_pwd in sasl_user_pwd:
                 # need't authentication if the auth.conf is configured by user
                 if not auth_conf:
@@ -365,7 +366,7 @@ def run(test, params, env):
 
                 if sasl_allowed_users and sasl_user not in sasl_allowed_users:
                     test_dict["status_error"] = "yes"
-
+		
                 remote_access(test_dict)
         else:
             remote_access(test_dict)
