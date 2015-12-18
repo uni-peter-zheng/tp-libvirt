@@ -1,5 +1,6 @@
 import logging
 import re
+import time
 from autotest.client.shared import error
 from virttest import libvirt_vm, virsh, utils_net, utils_misc
 from virttest.libvirt_xml import vm_xml
@@ -150,6 +151,8 @@ def run(test, params, env):
     if iface_mac == "created" or correct_attach:
         iface_mac = utils_net.generate_mac_address_simple()
 
+    #wait vm starting
+    time.sleep(20) 
     # Set attach-interface options and Start attach-interface test
     if correct_attach:
         options = set_options("network", "default", iface_mac, "", "attach")
