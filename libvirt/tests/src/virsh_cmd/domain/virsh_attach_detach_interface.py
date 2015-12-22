@@ -52,7 +52,10 @@ def login_to_check(vm, checked_mac):
     Login to vm to get matched interface according its mac address.
     """
     try:
-        session = vm.wait_for_login()
+        #session = vm.wait_for_login()
+        username = vm.params.get("username", "")
+        password = vm.params.get("password", "")
+        session = vm.wait_for_serial_login(username=username, password=password)
     except Exception, detail:  # Do not care Exception's type
         return (1, "Can not login to vm:%s" % detail)
     status, output = session.cmd_status_output("ip -4 -o link list")
