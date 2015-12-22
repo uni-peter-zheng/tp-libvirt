@@ -1,5 +1,6 @@
 import logging
 import re
+import time
 from autotest.client.shared import error
 from virttest import libvirt_vm, virsh, utils_net, utils_misc
 from virttest.libvirt_xml import vm_xml
@@ -51,7 +52,10 @@ def login_to_check(vm, checked_mac):
     Login to vm to get matched interface according its mac address.
     """
     try:
-        session = vm.wait_for_login()
+        #session = vm.wait_for_login()
+        username = vm.params.get("username", "")
+        password = vm.params.get("password", "")
+        session = vm.wait_for_serial_login(username=username, password=password)
     except Exception, detail:  # Do not care Exception's type
         return (1, "Can not login to vm:%s" % detail)
     status, output = session.cmd_status_output("ip -4 -o link list")
@@ -150,6 +154,8 @@ def run(test, params, env):
     if iface_mac == "created" or correct_attach:
         iface_mac = utils_net.generate_mac_address_simple()
 
+    #wait vm starting
+    time.sleep(20) 
     # Set attach-interface options and Start attach-interface test
     if correct_attach:
         options = set_options("network", "default", iface_mac, "", "attach")

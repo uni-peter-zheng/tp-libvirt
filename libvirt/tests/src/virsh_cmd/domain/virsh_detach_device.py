@@ -245,8 +245,13 @@ def run(test, params, env):
     else:
         vm_cls = vm_xml.VMXML.new_from_dumpxml(vm_name)
         device_count_after_cmd = len(vm_cls.devices)
-    if device_count_after_cmd < device_count_before_cmd:
-        check_count_after_cmd = False
+    
+    if dt_options.count("current") and pre_vm_state == "shut off":
+        if device_count_after_cmd >= device_count_before_cmd:
+            check_count_after_cmd = False
+    else:
+        if device_count_after_cmd < device_count_before_cmd:
+            check_count_after_cmd = False
 
     # Recover VM state.
     if pre_vm_state == "shut off" and device in ['disk', 'cdrom']:
