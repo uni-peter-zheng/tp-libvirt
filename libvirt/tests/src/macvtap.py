@@ -92,7 +92,7 @@ def run(test, params, env):
         username = vm.params.get("username", "")
         password = vm.params.get("password", "")
         session = vm.wait_for_serial_login(username=username, password=password)
-        status, output = session.cmd_status_output("ifconfig eth0 | grep "inet " | awk '{print $2}'")
+        status, output = session.cmd_status_output("ifconfig eth0 | grep 'inet ' | awk '{print $2}'")
         output=output.strip('\n')
         if output:
             session.cmd("ip route add 192.168.1.0/24 dev eth0 table 20")
