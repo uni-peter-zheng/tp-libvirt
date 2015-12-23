@@ -87,7 +87,7 @@ def run(test, params, env):
 
         # Modify new interface's IP
         vm.start()
-        time.sleep(30)
+        time.sleep(35)
         #session = vm.wait_for_login()
         username = vm.params.get("username", "")
         password = vm.params.get("password", "")
