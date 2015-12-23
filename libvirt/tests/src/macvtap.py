@@ -1,4 +1,5 @@
 import os
+import time
 from autotest.client.shared import error
 from virttest import remote
 from virttest import utils_net
@@ -25,13 +26,17 @@ def run(test, params, env):
     vm2_ip = params.get("vm2_ip", "ENTER.YOUR.GUEST2.IP")
     eth_config_file = params.get("eth_config_file",
                                  "ENTER.YOUR.CONFIG.FILE.PATH")
-    persistent_net_file = params.get("persistent_net_file",
-                                     "ENTER.YOUR.RULE.FILE.PATH")
+    #persistent_net_file = params.get("persistent_net_file",
+    #                                 "ENTER.YOUR.RULE.FILE.PATH")
 
+    #param_keys = ["remote_ip", "vm1_ip", "vm2_ip", "eth_card_no",
+    #              "eth_config_file", "persistent_net_file"]
+    #param_values = [remote_ip, vm1_ip, vm2_ip, eth_card_no,
+    #               eth_config_file, persistent_net_file]
     param_keys = ["remote_ip", "vm1_ip", "vm2_ip", "eth_card_no",
-                  "eth_config_file", "persistent_net_file"]
+                  "eth_config_file"]
     param_values = [remote_ip, vm1_ip, vm2_ip, eth_card_no,
-                    eth_config_file, persistent_net_file]
+                   eth_config_file]
     for key, value in zip(param_keys, param_values):
         if value.count("ENTER.YOUR"):
             raise error.TestNAError("Parameter '%s'(%s) is not configured."
@@ -82,13 +87,26 @@ def run(test, params, env):
 
         # Modify new interface's IP
         vm.start()
-        session = vm.wait_for_login()
+        time.sleep(30)
+        #session = vm.wait_for_login()
+        username = vm.params.get("username", "")
+        password = vm.params.get("password", "")
+        session = vm.wait_for_serial_login(username=username, password=password)
+        status, output = session.cmd_status_output("ifconfig eth0 | grep "inet " | awk '{print $2}'")
+        output=output.strip('\n')
+        if output:
+            session.cmd("ip route add 192.168.1.0/24 dev eth0 table 20")
+            input_cmd = "ip rule add from %s table 20" %output
+            session.cmd(input_cmd)
+            time.sleep(1)
         eth_name = utils_net.get_linux_ifname(session, new_nic.mac_address)
-        eth_config_detail_list = ['DEVICE=%s' % eth_name,
+        eth_config_detail_list = ['TYPE=Ethernet',
+                                  'DEVICE=%s' % eth_name,
                                   'HWADDR=%s' % new_nic.mac_address,
                                   'ONBOOT=yes',
                                   'BOOTPROTO=static',
-                                  'IPADDR=%s' % ip_addr]
+                                  'IPADDR=%s' % ip_addr,
+                                  'PREFIX=24']
         remote_file = remote.RemoteFile(vm.get_address(), 'scp', 'root',
                                         params.get('password'), 22,
                                         eth_config_file)
@@ -104,6 +122,9 @@ def run(test, params, env):
             session.cmd("ifup %s" % eth_name)
         except aexpect.ShellCmdError:
             pass
+        
+        session = vm.wait_for_login()
+        
         return session
 
     def guest_clean(vm, vmxml):
@@ -117,14 +138,14 @@ def run(test, params, env):
         session = vm.wait_for_login()
         session.cmd("rm -f %s" % eth_config_file)
         session.cmd("sync")
-        try:
+        #try:
             # Delete the last 3 lines
-            session.cmd('sed -i "$[$(cat %s | wc -l) - 2],$"d %s'
-                        % (persistent_net_file, persistent_net_file))
-            session.cmd("sync")
-        except aexpect.ShellCmdError:
+        #    session.cmd('sed -i "$[$(cat %s | wc -l) - 2],$"d %s'
+        #                % (persistent_net_file, persistent_net_file))
+        #    session.cmd("sync")
+        #except aexpect.ShellCmdError:
             # This file may not exists
-            pass
+        #    pass
         vm.destroy()
         vmxml.sync()
 
