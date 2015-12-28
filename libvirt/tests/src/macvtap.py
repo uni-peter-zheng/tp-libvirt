@@ -99,6 +99,7 @@ def run(test, params, env):
             input_cmd = "ip rule add from %s table 20" %output
             session.cmd(input_cmd)
             time.sleep(1)
+        global eth_name
         eth_name = utils_net.get_linux_ifname(session, new_nic.mac_address)
         eth_config_detail_list = ['TYPE=Ethernet',
                                   'DEVICE=%s' % eth_name,
@@ -154,7 +155,7 @@ def run(test, params, env):
         vepa mode test.
         Check guest can ping remote host
         """
-        ping_s, _ = ping(remote_ip, count=1, timeout=5, session=session)
+        ping_s, _ = ping(remote_ip, count=1, interface=eth_name, timeout=5, session=session)
         if ping_s:
             raise error.TestFail("%s ping %s failed." % (vm1.name, remote_ip))
 
@@ -163,10 +164,10 @@ def run(test, params, env):
         private mode test.
         Check guest cannot ping other guest, but can pin remote host
         """
-        ping_s, _ = ping(remote_ip, count=1, timeout=5, session=session)
+        ping_s, _ = ping(remote_ip, count=1, interface=eth_name, timeout=5, session=session)
         if ping_s:
             raise error.TestFail("%s ping %s failed." % (vm1.name, remote_ip))
-        ping_s, _ = ping(vm2_ip, count=1, timeout=5, session=session)
+        ping_s, _ = ping(vm2_ip, count=1, interface=eth_name, timeout=5, session=session)
         if not ping_s:
             raise error.TestFail("%s ping %s succeed, but expect failed."
                                  % (vm1.name, vm2.name))
@@ -174,7 +175,7 @@ def run(test, params, env):
             iface_cls.down()
         except error.CmdError, detail:
             raise error.TestNAError(str(detail))
-        ping_s, _ = ping(vm2_ip, count=1, timeout=5, session=session)
+        ping_s, _ = ping(vm2_ip, count=1, interface=eth_name, timeout=5, session=session)
         if not ping_s:
             raise error.TestFail("%s ping %s succeed, but expect failed."
                                  % (vm1.name, remote_ip))
@@ -186,16 +187,16 @@ def run(test, params, env):
         When guest is running, local host cannot ping remote host,
         When guest is poweroff, local host can ping remote host,
         """
-        ping_s, _ = ping(remote_ip, count=1, timeout=5, session=session)
+        ping_s, _ = ping(remote_ip, count=1, interface=eth_name, timeout=5, session=session)
         if ping_s:
             raise error.TestFail("%s ping %s failed."
                                  % (vm1.name, remote_ip))
-        ping_s, _ = ping(remote_ip, count=1, timeout=5)
+        ping_s, _ = ping(remote_ip, count=1, interface=eth_name, timeout=5)
         if not ping_s:
             raise error.TestFail("host ping %s succeed, but expect fail."
                                  % remote_ip)
         vm1.destroy(gracefully=False)
-        ping_s, _ = ping(remote_ip, count=1, timeout=5)
+        ping_s, _ = ping(remote_ip, count=1, interface=eth_name, timeout=5)
         if ping_s:
             raise error.TestFail("host ping %s failed."
                                  % remote_ip)
@@ -207,11 +208,11 @@ def run(test, params, env):
         guest can ping other guest when macvtap nic is up
         guest cannot ping remote host when macvtap nic is up
         """
-        ping_s, _ = ping(remote_ip, count=1, timeout=5, session=session)
+        ping_s, _ = ping(remote_ip, count=1, interface=eth_name, timeout=5, session=session)
         if ping_s:
             raise error.TestFail("%s ping %s failed."
                                  % (vm1.name, remote_ip))
-        ping_s, _ = ping(vm2_ip, count=1, timeout=5, session=session)
+        ping_s, _ = ping(vm2_ip, count=1, interface=eth_name, timeout=5, session=session)
         if ping_s:
             raise error.TestFail("%s ping %s failed."
                                  % (vm1.name, vm2.name))
@@ -219,7 +220,7 @@ def run(test, params, env):
             iface_cls.down()
         except error.CmdError, detail:
             raise error.TestNAError(str(detail))
-        ping_s, _ = ping(remote_ip, count=1, timeout=5, session=session)
+        ping_s, _ = ping(remote_ip, count=1, interface=eth_name, timeout=5, session=session)
         if not ping_s:
             raise error.TestFail("%s ping %s success, but expected fail."
                                  % (vm1.name, remote_ip))
