@@ -26,6 +26,11 @@ def run(test, params, env):
 
     vm_name = params.get('main_vm')
     vm = env.get_vm(vm_name)
+    if vm.is_alive():
+        vm.destroy()
+        time.sleep(2)
+        vm.start()
+        time.sleep(20)
 
     # Wait guest agent channel to be connected to avoid XML differ
     try:
@@ -39,7 +44,6 @@ def run(test, params, env):
 
     # Skip the test when serial login is not available
     try:
-        time.sleep(20)
         session = vm.wait_for_serial_login(60)
     except remote.LoginError:
         raise error.TestNAError('Serial console might needed to be '
