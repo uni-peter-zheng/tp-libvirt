@@ -925,6 +925,9 @@ def run(test, params, env):
     vm_name = params.get("main_vm", "virt-tests-vm1")
     spice_xml = params.get("spice_xml", "no") == 'yes'
     vnc_xml = params.get("vnc_xml", "no") == 'yes'
+    vm = env.get_vm(vm_name)
+    if vm.is_alive():
+        vm.destroy()
 
     sockets = block_ports(params)
     networks = setup_networks(params)
@@ -932,7 +935,6 @@ def run(test, params, env):
     expected_result = get_expected_results(params, networks)
     env_state = EnvState(params, expected_result)
 
-    vm = env.get_vm(vm_name)
     vm_xml = VMXML.new_from_inactive_dumpxml(vm_name)
     vm_xml_backup = vm_xml.copy()
     try:
