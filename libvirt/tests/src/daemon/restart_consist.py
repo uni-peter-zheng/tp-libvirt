@@ -1,5 +1,6 @@
 import logging
 import difflib
+import time
 from autotest.client.shared import error
 from virttest.aexpect import ExpectTimeoutError
 from virttest.aexpect import ShellTimeoutError
@@ -38,6 +39,7 @@ def run(test, params, env):
 
     # Skip the test when serial login is not available
     try:
+        time.sleep(20)
         session = vm.wait_for_serial_login(60)
     except remote.LoginError:
         raise error.TestNAError('Serial console might needed to be '
