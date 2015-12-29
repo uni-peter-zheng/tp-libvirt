@@ -45,7 +45,7 @@ class Vol_clone(object):
         """
         Start test, Creat a volume.
         """
-        emulated_size = "%sG" % (int(self.volume_size[:-1]) + 1)
+        emulated_size = "%sG" % (2 * int(self.volume_size[:-1]) + 1)
         if int(self.volume_size[:-1]) <= 1:
             raise error.TestNAError("Volume size must large than 1G")
         self.pvtest = libvirt.PoolVolumeTest(self.test, self.params)
@@ -98,7 +98,7 @@ class Vol_create(object):
         """
         Start test, Creat a volume.
         """
-        emulated_size = "%sG" % (2 * int(self.volume_size[:-1]) + 1)
+        emulated_size = "%sG" % (int(self.volume_size[:-1]) + 1)
         if int(self.volume_size[:-1]) <= 1:
             raise error.TestNAError("Volume size must large than 1G")
         self.pvtest = libvirt.PoolVolumeTest(self.test, self.params)
