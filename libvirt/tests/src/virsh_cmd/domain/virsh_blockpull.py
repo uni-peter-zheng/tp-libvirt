@@ -228,7 +228,7 @@ def run(test, params, env):
             blockpull_options = "--wait --verbose"
 
         if with_timeout:
-            blockpull_options += " --timeout 1"
+            blockpull_options += " --timeout 120"
 
         if bandwidth:
             blockpull_options += " --bandwidth %s" % bandwidth
