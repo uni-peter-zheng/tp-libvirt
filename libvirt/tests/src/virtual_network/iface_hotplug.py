@@ -58,6 +58,9 @@ def run(test, params, env):
     vmxml_backup = vm_xml.VMXML.new_from_inactive_dumpxml(vm_name)
     #iface_mac = vm_xml.VMXML.get_first_mac_by_name(vm_name)
     libvirtd = utils_libvirtd.Libvirtd()
+    
+    if vm.is_alive():
+        time.sleep(20)
 
     try:
         try:
