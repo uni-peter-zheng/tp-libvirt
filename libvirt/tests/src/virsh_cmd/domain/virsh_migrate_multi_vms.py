@@ -270,6 +270,8 @@ def run(test, params, env):
         vm = helper.vm
         if vm.is_dead():
             vm.start()
+        if vm.is_paused():
+            vm.resume()
         vm.wait_for_login()
         # Used for checking downtime
         helper.vm_ip = vm.get_address()
