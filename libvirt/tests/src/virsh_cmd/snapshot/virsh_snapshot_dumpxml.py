@@ -124,6 +124,7 @@ def run(test, params, env):
             vm_xml.VMXML.add_security_info(
                 vm_xml.VMXML.new_from_dumpxml(vm_name), passwd)
             vm.start()
+            time.sleep(20)
             if secu_opt is not None:
                 opt_dict['passwd'] = passwd
 
