@@ -2,6 +2,7 @@ import os
 import logging
 import re
 import tempfile
+import time
 from autotest.client.shared import error
 from autotest.client import utils
 from virttest import virsh, qemu_storage, data_dir
@@ -175,6 +176,8 @@ def run(test, params, env):
             # Do the attach action.
             out = utils.run("qemu-img info %s" % img_path)
             logging.debug("The img info is:\n%s" % out.stdout.strip())
+            if vm.is_alive():
+                time.sleep(20)
             result = virsh.attach_disk(vm_name, source=img_path, target="vdf",
                                        extra=extra, debug=True)
             if result.exit_status:
