@@ -107,6 +107,7 @@ def run(test, params, env):
                                       aft_line.lstrip().strip())
             raise error.TestFail("Failed xml before/after comparison")
 
+    time.sleep(20)
     snapshot_oldlist = None
     try:
         # Create disk snapshot before all to make the origin image clean
